@@ -10,14 +10,15 @@ Type your details, preview the signature live, and download it as a high-resolut
 3. Choose an image size and click **Download PNG**, or **Copy image** to paste straight into Outlook or Gmail.
 
 Leave a field empty to hide that line. Long names and titles shrink automatically to fit.
-Staff with a second phone number or email can add it in the optional **Second phone** / **Second email** fields;
-it appears on the same line as the first, separated by a divider.
 
 ### Social media icons
 
-By default Instagram, X and Facebook show red letter badges (IG, X, FB).
-To use the official platform icons, download them from each platform's brand resources and load them in the
-**Social media icons** section. They are remembered in that browser on that computer.
+Icons use MBC Maroon `#941C26` (Pantone 7427 C).
+
+The official Instagram, X and Facebook icons are built in when their files are in `source/assets/social/`
+(`instagram.svg`/`.png`, `x.svg`/`.png`, `facebook.svg`/`.png`) at build time. Without a file, that platform shows a maroon
+letter badge (IG, X, FB). Staff can also load a replacement icon in the **Social media icons** section; it is remembered
+in that browser on that computer.
 
 ## Project layout
 
@@ -25,7 +26,7 @@ To use the official platform icons, download them from each platform's brand res
 | --- | --- |
 | `index.html` | The finished, self-contained tool (fonts and logos embedded). This is what GitHub Pages serves. |
 | `source/template.html` | Editable source of the page. |
-| `source/assets/` | MBC logo and sub-brand logos (extracted from the MBC Brand Guidelines 2024). |
+| `source/assets/` | MBC logo and sub-brand logos and the brand swirl watermark (from the 2024 MBC Branding and Marking Guidelines). |
 | `source/fonts/` | Montserrat (SIL Open Font License, see `OFL-LICENSE.txt`). |
 | `source/build.py` | Rebuilds `index.html` from the template, assets and fonts. |
 
