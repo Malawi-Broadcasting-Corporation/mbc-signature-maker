@@ -10,6 +10,8 @@ Type your details, preview the signature live, and download it as a high-resolut
 3. Choose an image size and click **Download PNG**, or **Copy image** to paste straight into Outlook or Gmail.
 
 Leave a field empty to hide that line. Long names and titles shrink automatically to fit.
+Staff with a second phone number or email can add it in the optional **Second phone** / **Second email** fields;
+it appears on the same line as the first, separated by a divider.
 
 ### Social media icons
 
