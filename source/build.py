@@ -22,7 +22,19 @@ replacements = {
     "__R1__": b64("assets", "radio1.svg"),
     "__R2__": b64("assets", "radio2.svg"),
     "__M2__": b64("assets", "mbc2.png"),
+    "__WM__": b64("assets", "watermark.png"),
 }
+# Official social media icons (optional): put the files in source/assets/social/
+# named instagram.svg|png, x.svg|png, facebook.svg|png
+MIME = {".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp"}
+for key, stem in (("__IG__", "instagram"), ("__XI__", "x"), ("__FB__", "facebook")):
+    for ext, mime in MIME.items():
+        path = os.path.join(HERE, "assets", "social", stem + ext)
+        if os.path.exists(path):
+            replacements[key] = "data:%s;base64,%s" % (mime, b64("assets", "social", stem + ext))
+            print("Using %s icon: %s" % (stem, stem + ext))
+            break
+
 for key, value in replacements.items():
     html = html.replace(key, value)
 
