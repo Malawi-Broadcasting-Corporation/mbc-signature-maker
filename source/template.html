@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MBC Email Signature Maker</title>
+<style>
+@font-face{font-family:"MontserratSig";font-weight:500;src:url(data:font/woff2;base64,__F500__) format("woff2")}
+@font-face{font-family:"MontserratSig";font-weight:600;src:url(data:font/woff2;base64,__F600__) format("woff2")}
+@font-face{font-family:"MontserratSig";font-weight:700;src:url(data:font/woff2;base64,__F700__) format("woff2")}
+@font-face{font-family:"MontserratSig";font-weight:800;src:url(data:font/woff2;base64,__F800__) format("woff2")}
+:root{--maroon:#941C26;--red:#DE232A;--green:#02964E;--ink:#1a1a1a;--muted:#5b5b5b;--line:#e3e0e0;--bg:#f5f3f3}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"MontserratSig",Arial,sans-serif}
+header{background:var(--maroon);color:#fff;padding:18px 24px}
+header h1{margin:0;font-size:20px;font-weight:700}
+header p{margin:4px 0 0;font-size:13px;opacity:.9;font-weight:500}
+main{max-width:1240px;margin:0 auto;padding:24px 16px 48px;display:flex;flex-direction:column;gap:24px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px}
+.card h2{margin:0 0 14px;font-size:15px;font-weight:700;color:var(--maroon)}
+.preview{width:100%;overflow:hidden;border:1px solid var(--line);border-radius:6px;line-height:0}
+.preview svg{width:100%;height:auto;display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px 18px}
+label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:var(--muted)}
+input,select{font:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:10px 12px;border:1px solid #cfcaca;border-radius:6px;background:#fff;min-height:44px}
+input:focus,select:focus{outline:2px solid var(--red);outline-offset:1px;border-color:var(--red)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:18px}
+button{font:inherit;font-size:15px;font-weight:700;border:0;border-radius:8px;padding:12px 20px;min-height:44px;cursor:pointer}
+.primary{background:var(--green);color:#fff}
+.primary:hover{background:#027a40}
+.secondary{background:#fff;color:var(--maroon);border:2px solid var(--maroon)}
+.secondary:hover{background:#fbeeee}
+.status{font-size:13px;font-weight:600;color:var(--green);min-height:20px}
+.help{font-size:13px;line-height:1.6;color:var(--muted);font-weight:500}
+.help ol{margin:6px 0 0;padding-left:20px}
+</style>
+</head>
+<body>
+<header>
+<h1>MBC Email Signature Maker</h1>
+<p>Type the staff member’s details, then download the signature as a high‑resolution PNG. Works offline.</p>
+</header>
+<main>
+<section class="card">
+<h2>Preview</h2>
+<div class="preview" id="preview"></div>
+</section>
+
+<section class="card">
+<h2>Staff details</h2>
+<form class="grid" id="form" autocomplete="off" onsubmit="return false">
+<label>Full name<input id="name" value="Benson Tembo"></label>
+<label>Job title<input id="title" value="Chief Executive Officer"></label>
+<label>Phone<input id="phone" value="+265 999 999 999"></label>
+<label>Email<input id="email" value="ceo@mbc.mw"></label>
+<label style="grid-column:1/-1">Address<input id="address" value="P.O. Box 30133, Chichiri, Blantyre 3, Malawi"></label>
+<label>Instagram<input id="ig" value="mbcdigital247"></label>
+<label>X<input id="xh" value="@MBC_Digital247"></label>
+<label>Facebook<input id="fb" value="MBC Digital"></label>
+<label>Website<input id="website" value="www.mbc.mw"></label>
+<label>Tagline<input id="tagline" value="Inspiring the nation"></label>
+</form>
+<div class="actions">
+<label>Image size
+<select id="scale">
+<option value="1">Standard — 1200 × 300 px</option>
+<option value="2" selected>High — 2400 × 600 px</option>
+<option value="3">Print — 3600 × 900 px</option>
+</select>
+</label>
+<button class="primary" type="button" id="download">Download PNG</button>
+<button class="secondary" type="button" id="copy">Copy image</button>
+<button class="secondary" type="button" id="reset">Clear fields</button>
+<span class="status" id="status" role="status"></span>
+</div>
+</section>
+
+<section class="card">
+<h2>Social media icons (optional)</h2>
+<p class="help" style="margin:0 0 14px">By default each platform shows a red letter badge (IG, X, FB). To use the official icons instead, save each platform’s icon from its official brand resources as a PNG or SVG, then load it below. The icons are remembered on this computer, so you only need to do this once per PC.</p>
+<div class="grid">
+<label>Instagram icon<input type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" data-icon="ig"><span class="help" id="st-ig"></span></label>
+<label>X icon<input type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" data-icon="x"><span class="help" id="st-x"></span></label>
+<label>Facebook icon<input type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" data-icon="fb"><span class="help" id="st-fb"></span></label>
+</div>
+<div class="actions"><button class="secondary" type="button" id="clearIcons">Remove loaded icons</button></div>
+</section>
+
+<section class="card help">
+<h2>Adding it to email</h2>
+<ol>
+<li><b>Outlook:</b> File › Options › Mail › Signatures › New, then paste (Ctrl+V) after “Copy image”, or use the picture button to insert the downloaded PNG. Set its width to about 600 px.</li>
+<li><b>Gmail:</b> Settings › See all settings › Signature › Create new, then click the image icon and upload the PNG.</li>
+<li>Leave a field empty to hide that line (phone, email, address, or any social platform).</li>
+<li>“Clear fields” only empties the personal details (name, title, phone, email). The company details stay.</li>
+</ol>
+</section>
+</main>
+
+<script>
+(function(){
+var LOGO = "data:image/svg+xml;base64,__LOGO__";
+var R1 = "data:image/svg+xml;base64,__R1__";
+var R2 = "data:image/svg+xml;base64,__R2__";
+var M2 = "data:image/png;base64,__M2__";
+var FONTCSS = '@font-face{font-family:"MontserratSig";font-weight:500;src:url(data:font/woff2;base64,__F500__) format("woff2")}'
+ + '@font-face{font-family:"MontserratSig";font-weight:600;src:url(data:font/woff2;base64,__F600__) format("woff2")}'
+ + '@font-face{font-family:"MontserratSig";font-weight:700;src:url(data:font/woff2;base64,__F700__) format("woff2")}'
+ + '@font-face{font-family:"MontserratSig";font-weight:800;src:url(data:font/woff2;base64,__F800__) format("woff2")}';
+var W = 1200, H = 300, FAM = "MontserratSig, Arial, sans-serif";
+var ids = ["name","title","phone","email","address","ig","xh","fb","website","tagline"];
+var ICON_KEY = "mbc-signature-icons";
+var icons = {};
+try { icons = JSON.parse(localStorage.getItem(ICON_KEY) || "{}") || {}; } catch(e){ icons = {}; }
+function saveIcons(){ try { localStorage.setItem(ICON_KEY, JSON.stringify(icons)); } catch(e){} }
+function iconState(){
+ ["ig","x","fb"].forEach(function(k){
+  var el = document.getElementById("st-" + k);
+  if (el) el.textContent = icons[k] ? "Official icon loaded" : "Using letter badge";
+ });
+}
+var $ = function(id){ return document.getElementById(id); };
+var mctx = document.createElement("canvas").getContext("2d");
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function measure(text, weight, size){ mctx.font = weight + " " + size + "px MontserratSig, Arial, sans-serif"; return mctx.measureText(text).width; }
+function fit(text, weight, size, maxW, minSize){ var s = size; while (s > minSize && measure(text, weight, s) > maxW) s -= 0.5; return s; }
+
+var ICON = {
+ phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2a19.8 19.8 0 0 1-8.6-3.1a19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+ mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/>',
+ pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>',
+ at: '<circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/>',
+ play: '<path d="M8 5.5v13l11-6.5z" fill="#FFFFFF" stroke="none"/>',
+ globe: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20a15 15 0 0 1 0-20z"/>'
+};
+function badge(x, cy, icon, r, bg, fg){
+ r = r || 13; bg = bg || "#DE232A"; fg = fg || "#FFFFFF";
+ var s = r * 1.1 / 24;
+ return '<circle cx="'+x+'" cy="'+cy+'" r="'+r+'" fill="'+bg+'"/>'
+  + '<g transform="translate('+(x-12*s)+' '+(cy-12*s)+') scale('+s+')" fill="none" stroke="'+fg+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+icon+'</g>';
+}
+
+function build(d){
+ var o = [];
+ o.push('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">');
+ o.push('<defs><style>'+FONTCSS+'</style>'
+  + '<clipPath id="panel"><path d="M0 0H620L558 300H0Z"/></clipPath>'
+  + '<pattern id="hatch" width="6" height="12" patternUnits="userSpaceOnUse" patternTransform="skewX(-25)"><rect width="2" height="12" fill="#02964E"/></pattern>'
+  + '<filter id="sh" x="-10%" y="-30%" width="120%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.2"/></filter>'
+  + '</defs>');
+ o.push('<rect width="'+W+'" height="'+H+'" fill="#FFFFFF"/>');
+ o.push('<g clip-path="url(#panel)"><rect width="620" height="300" fill="#941C26"/>'
+  + '<circle cx="470" cy="150" r="190" fill="none" stroke="#DE232A" stroke-opacity="0.2" stroke-width="44"/>'
+  + '<circle cx="470" cy="150" r="95" fill="none" stroke="#DE232A" stroke-opacity="0.2" stroke-width="40"/>'
+  + '<path d="M470 -60A210 210 0 0 0 260 150" fill="none" stroke="#DE232A" stroke-opacity="0.14" stroke-width="22" stroke-linecap="round"/></g>');
+ // main logo (aspect from vector source 143.31 x 50.27)
+ o.push('<image href="'+LOGO+'" xlink:href="'+LOGO+'" x="56" y="64" width="300" height="105.2"/>');
+ // website
+ if (d.website){
+  o.push(badge(71, 255, ICON.globe, 15, "#FFFFFF", "#941C26"));
+  o.push('<text x="96" y="260.5" font-family="'+FAM+'" font-weight="600" font-size="15" fill="#FFFFFF">'+esc(d.website)+'</text>');
+ }
+ // sub-brand pill
+ o.push('<rect x="230" y="228" width="400" height="52" rx="26" fill="#FFFFFF" filter="url(#sh)"/>');
+ o.push('<image href="'+R1+'" xlink:href="'+R1+'" x="262" y="235" width="72" height="38"/>');
+ o.push('<image href="'+R2+'" xlink:href="'+R2+'" x="404" y="234" width="44.9" height="40"/>');
+ o.push('<image href="'+M2+'" xlink:href="'+M2+'" x="537" y="236" width="66.5" height="36"/>');
+
+ // right column
+ var X = 640, MAXW = 530;
+ var ns = fit(d.name || " ", 800, 30, MAXW, 18);
+ o.push('<text x="'+X+'" y="62" font-family="'+FAM+'" font-weight="800" font-size="'+ns+'" fill="#111111">'+esc(d.name)+'</text>');
+ var ts = fit(d.title || " ", 500, 17, MAXW, 12);
+ o.push('<text x="'+X+'" y="90" font-family="'+FAM+'" font-weight="500" font-size="'+ts+'" fill="#941C26">'+esc(d.title)+'</text>');
+
+ var rows = [];
+ if (d.phone) rows.push({icon:ICON.phone, text:d.phone, w:600});
+ if (d.email) rows.push({icon:ICON.mail, text:d.email, w:500});
+ if (d.address) rows.push({icon:ICON.pin, text:d.address, w:500});
+ var cy = 124, step = 34;
+ rows.forEach(function(r){
+  o.push(badge(X+13, cy, r.icon));
+  var fs = fit(r.text, r.w, 15, MAXW-40, 11);
+  o.push('<text x="'+(X+38)+'" y="'+(cy+5)+'" font-family="'+FAM+'" font-weight="'+r.w+'" font-size="'+fs+'" fill="#111111">'+esc(r.text)+'</text>');
+  cy += step;
+ });
+ var socials = [["ig", d.ig, "IG"], ["x", d.xh, "X"], ["fb", d.fb, "FB"]].filter(function(p){ return p[1]; });
+ if (socials.length){
+  var sfs = 15, gap = 22;
+  var total = function(){ return socials.reduce(function(a,p){ return a + 34 + measure(p[1], 500, sfs); }, 0) + gap*(socials.length-1); };
+  while (total() > MAXW && sfs > 11){ sfs -= 0.5; gap = Math.max(12, gap - 1); }
+  var sx = X;
+  socials.forEach(function(p){
+   var custom = icons[p[0]];
+   if (custom){
+    o.push('<image href="'+custom+'" xlink:href="'+custom+'" x="'+sx+'" y="'+(cy-13)+'" width="26" height="26" preserveAspectRatio="xMidYMid meet"/>');
+   } else {
+    o.push('<circle cx="'+(sx+13)+'" cy="'+cy+'" r="13" fill="#DE232A"/>');
+    o.push('<text x="'+(sx+13)+'" y="'+(cy+4.2)+'" text-anchor="middle" font-family="'+FAM+'" font-weight="800" font-size="'+(p[2].length > 1 ? 10.5 : 12.5)+'" fill="#FFFFFF">'+p[2]+'</text>');
+   }
+   o.push('<text x="'+(sx+34)+'" y="'+(cy+5)+'" font-family="'+FAM+'" font-weight="500" font-size="'+sfs+'" fill="#111111">'+esc(p[1])+'</text>');
+   sx += 34 + measure(p[1], 500, sfs) + gap;
+  });
+ }
+ // tagline pill + hatch
+ var tag = d.tagline || "";
+ var px = X;
+ if (tag){
+  var tw = measure(tag, 700, 14) + 44;
+  o.push('<rect x="'+X+'" y="244" width="'+tw+'" height="34" rx="17" fill="#02964E"/>');
+  o.push('<text x="'+(X+22)+'" y="266" font-family="'+FAM+'" font-weight="700" font-size="14" letter-spacing="0.3" fill="#FFFFFF">'+esc(tag)+'</text>');
+  px = X + tw + 8;
+ }
+ o.push('<rect x="'+px+'" y="255" width="'+(W-px)+'" height="12" fill="url(#hatch)"/>');
+ o.push('</svg>');
+ return o.join("");
+}
+
+function data(){ var d = {}; ids.forEach(function(k){ d[k] = $(k).value.trim(); }); return d; }
+function render(){ $("preview").innerHTML = build(data()); }
+
+function toPNG(cb){
+ var svg = build(data());
+ var scale = parseInt($("scale").value, 10) || 2;
+ var img = new Image();
+ img.onload = function(){
+  var c = document.createElement("canvas");
+  c.width = W*scale; c.height = H*scale;
+  var g = c.getContext("2d");
+  g.fillStyle = "#FFFFFF"; g.fillRect(0,0,c.width,c.height);
+  g.drawImage(img, 0, 0, c.width, c.height);
+  c.toBlob(cb, "image/png");
+ };
+ img.onerror = function(){ status("Could not create the image in this browser. Try Chrome or Edge.", true); };
+ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+function status(msg, bad){ var s = $("status"); s.textContent = msg; s.style.color = bad ? "#DE232A" : "#02964E"; }
+function fileName(){ var n = $("name").value.trim().replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,""); return "MBC-signature" + (n ? "-" + n : "") + ".png"; }
+
+$("download").addEventListener("click", function(){
+ status("Preparing…");
+ toPNG(function(blob){
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = fileName();
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
+  status("Downloaded " + fileName());
+ });
+});
+$("copy").addEventListener("click", function(){
+ status("Preparing…");
+ toPNG(function(blob){
+  try {
+   navigator.clipboard.write([new ClipboardItem({"image/png": blob})]).then(function(){
+    status("Copied — paste it into your email signature settings.");
+   }, function(){ status("Copying isn’t allowed here — use Download PNG instead.", true); });
+  } catch(e){ status("Copying isn’t supported here — use Download PNG instead.", true); }
+ });
+});
+$("reset").addEventListener("click", function(){
+ ["name","title","phone","email"].forEach(function(k){ $(k).value = ""; });
+ render(); $("name").focus(); status("");
+});
+ids.forEach(function(k){ $(k).addEventListener("input", render); });
+
+Array.prototype.forEach.call(document.querySelectorAll("input[data-icon]"), function(inp){
+ inp.addEventListener("change", function(){
+  var f = inp.files && inp.files[0]; if (!f) return;
+  var key = inp.getAttribute("data-icon");
+  var rd = new FileReader();
+  rd.onload = function(){
+   var im = new Image();
+   im.onload = function(){
+    var S = 128, c = document.createElement("canvas"); c.width = S; c.height = S;
+    var g = c.getContext("2d");
+    var w = im.naturalWidth || S, h = im.naturalHeight || S, k = Math.min(S / w, S / h);
+    g.drawImage(im, (S - w*k)/2, (S - h*k)/2, w*k, h*k);
+    try { icons[key] = c.toDataURL("image/png"); } catch(e){ icons[key] = rd.result; }
+    saveIcons(); iconState(); render(); status("Icon loaded.");
+   };
+   im.onerror = function(){ status("That file couldn’t be read as an image.", true); };
+   im.src = rd.result;
+  };
+  rd.readAsDataURL(f);
+  inp.value = "";
+ });
+});
+$("clearIcons").addEventListener("click", function(){ icons = {}; saveIcons(); iconState(); render(); status("Icons removed."); });
+iconState();
+
+if (document.fonts && document.fonts.load){
+ Promise.all([500,600,700,800].map(function(w){ return document.fonts.load(w + " 16px MontserratSig"); })).then(render, render);
+}
+render();
+})();
+</script>
+</body>
+</html>
