@@ -53,6 +53,8 @@ button{font:inherit;font-size:15px;font-weight:700;border:0;border-radius:8px;pa
 <label>Job title<input id="title" value="Director General"></label>
 <label>Phone<input id="phone" value="+265 999 999 999"></label>
 <label>Email<input id="email" value="ceo@mbc.mw"></label>
+<label>Second phone (optional)<input id="phone2"></label>
+<label>Second email (optional)<input id="email2"></label>
 <label style="grid-column:1/-1">Address<input id="address" value="P.O. Box 30133, Chichiri, Blantyre 3, Malawi"></label>
 <label>Instagram<input id="ig" value="mbcdigital247"></label>
 <label>X<input id="xh" value="@MBC_Digital247"></label>
@@ -92,7 +94,8 @@ button{font:inherit;font-size:15px;font-weight:700;border:0;border-radius:8px;pa
 <li><b>Outlook:</b> File › Options › Mail › Signatures › New, then paste (Ctrl+V) after “Copy image”, or use the picture button to insert the downloaded PNG. Set its width to about 600 px.</li>
 <li><b>Gmail:</b> Settings › See all settings › Signature › Create new, then click the image icon and upload the PNG.</li>
 <li>Leave a field empty to hide that line (phone, email, address, or any social platform).</li>
-<li>“Clear fields” only empties the personal details (name, title, phone, email). The company details stay.</li>
+<li>A second phone or email is shown on the same line as the first, separated by a divider.</li>
+<li>“Clear fields” only empties the personal details (name, title, phones, emails). The company details stay.</li>
 </ol>
 </section>
 </main>
@@ -110,7 +113,7 @@ var FONTCSS = '@font-face{font-family:"MontserratSig";font-weight:500;src:url(da
  + '@font-face{font-family:"MontserratSig";font-weight:700;src:url(data:font/woff2;base64,__F700__) format("woff2")}'
  + '@font-face{font-family:"MontserratSig";font-weight:800;src:url(data:font/woff2;base64,__F800__) format("woff2")}';
 var W = 1200, H = 300, FAM = "MontserratSig, Arial, sans-serif";
-var ids = ["name","title","phone","email","address","ig","xh","fb","website","tagline"];
+var ids = ["name","title","phone","phone2","email","email2","address","ig","xh","fb","website","tagline"];
 var ICON_KEY = "mbc-signature-icons";
 var DEFAULT_ICONS = {ig: "__IG__", x: "__XI__", fb: "__FB__"};
 // Official icons are white glyphs drawn on a maroon circle; Facebook's file is itself a circle.
@@ -183,14 +186,19 @@ function build(d){
  o.push('<text x="'+X+'" y="90" font-family="'+FAM+'" font-weight="500" font-size="'+ts+'" fill="#941C26">'+esc(d.title)+'</text>');
 
  var rows = [];
- if (d.phone) rows.push({icon:ICON.phone, text:d.phone, w:600});
- if (d.email) rows.push({icon:ICON.mail, text:d.email, w:500});
- if (d.address) rows.push({icon:ICON.pin, text:d.address, w:500});
+ // a second phone/email shares the line with the first, split by a light divider
+ var SEP = "  |  ";
+ var pair = function(a, b){ return [a, b].filter(Boolean); };
+ var phones = pair(d.phone, d.phone2), emails = pair(d.email, d.email2);
+ if (phones.length) rows.push({icon:ICON.phone, parts:phones, w:600});
+ if (emails.length) rows.push({icon:ICON.mail, parts:emails, w:500});
+ if (d.address) rows.push({icon:ICON.pin, parts:[d.address], w:500});
  var cy = 124, step = 34;
  rows.forEach(function(r){
   o.push(badge(X+13, cy, r.icon));
-  var fs = fit(r.text, r.w, 15, MAXW-40, 11);
-  o.push('<text x="'+(X+38)+'" y="'+(cy+5)+'" font-family="'+FAM+'" font-weight="'+r.w+'" font-size="'+fs+'" fill="#111111">'+esc(r.text)+'</text>');
+  var fs = fit(r.parts.join(SEP), r.w, 15, MAXW-40, 11);
+  var body = r.parts.map(esc).join('<tspan fill="#B5B5B5" xml:space="preserve">'+SEP+'</tspan>');
+  o.push('<text x="'+(X+38)+'" y="'+(cy+5)+'" font-family="'+FAM+'" font-weight="'+r.w+'" font-size="'+fs+'" fill="#111111" xml:space="preserve">'+body+'</text>');
   cy += step;
  });
  var socials = [["ig", d.ig, "IG"], ["x", d.xh, "X"], ["fb", d.fb, "FB"]].filter(function(p){ return p[1]; });
@@ -271,7 +279,7 @@ $("copy").addEventListener("click", function(){
  });
 });
 $("reset").addEventListener("click", function(){
- ["name","title","phone","email"].forEach(function(k){ $(k).value = ""; });
+ ["name","title","phone","phone2","email","email2"].forEach(function(k){ $(k).value = ""; });
  render(); $("name").focus(); status("");
 });
 ids.forEach(function(k){ $(k).addEventListener("input", render); });
